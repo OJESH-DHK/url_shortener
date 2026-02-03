@@ -41,7 +41,8 @@ MIDDLEWARE = [
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CSRF_TRUSTED_ORIGINS = [
-    'https://perceptibly-triacid-tameka.ngrok-free.dev'
+    'https://perceptibly-triacid-tameka.ngrok-free.dev',
+    'https://*.onrender.com'
 ]
 ROOT_URLCONF = 'url_manager.urls'
 
@@ -63,26 +64,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'url_manager.wsgi.application'
 
-# Database
-# Use PostgreSQL if credentials are provided, otherwise fallback to SQLite
-if os.getenv('DB_NAME'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '5432'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(
+
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600
+    )
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
