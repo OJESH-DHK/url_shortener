@@ -1,0 +1,151 @@
+{% extends 'shortener/base.html' %}
+
+{% block title %}Analytics - {{ url.short_code }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Back Button -->
+            <div class="mb-3">
+                <a href="{% url 'shortener:url_detail' url.short_code %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Details
+                </a>
+            </div>
+
+            <!-- Header -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-graph-up"></i> Analytics for {{ url.short_code }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0 text-break">
+                        <strong>Original URL:</strong> 
+                        <a href="{{ url.original_url }}" target="_blank">{{ url.original_url }}</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body text-center">
+                            <h2 class="display-4">{{ total_clicks }}</h2>
+                            <p class="mb-0">Total Clicks</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-info">
+                        <div class="card-body text-center">
+                            <h5>{{ url.created_at|date:"M d, Y" }}</h5>
+                            <p class="mb-0">Created On</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body text-center">
+                            <h5>
+                                {% if url.expires_at %}
+                                    {{ url.expires_at|date:"M d, Y" }}
+                                {% else %}
+                                    Never
+                                {% endif %}
+                            </h5>
+                            <p class="mb-0">Expires</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clicks by Date -->
+            {% if clicks_by_date %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar3"></i> Clicks by Date (Last 30 Days)
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Clicks</th>
+                                    <th>Bar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in clicks_by_date %}
+                                <tr>
+                                    <td>{{ item.date }}</td>
+                                    <td><strong>{{ item.count }}</strong></td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 style="width: {% widthratio item.count total_clicks 100 %}%">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Recent Clicks Detail -->
+            {% if recent_clicks %}
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-activity"></i> Recent Click Details
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date & Time</th>
+                                    <th>IP Address</th>
+                                    <th>User Agent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for click in recent_clicks %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ click.clicked_at|date:"M d, Y H:i:s" }}</td>
+                                    <td>{{ click.ip_address|default:"Unknown" }}</td>
+                                    <td class="text-truncate" style="max-width: 300px;" title="{{ click.user_agent }}">
+                                        {{ click.user_agent|truncatechars:60 }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-graph-down" style="font-size: 4rem; color: #ccc;"></i>
+                    <h4 class="mt-3">No clicks yet</h4>
+                    <p class="text-muted">Share your short URL to start tracking clicks!</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

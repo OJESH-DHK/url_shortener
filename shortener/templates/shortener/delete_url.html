@@ -1,0 +1,59 @@
+{% extends 'shortener/base.html' %}
+
+{% block title %}Delete URL - {{ url.short_code }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm mt-5">
+                <div class="card-body p-5">
+                    <h2 class="text-center text-danger mb-4">
+                        <i class="bi bi-exclamation-triangle"></i> Delete URL
+                    </h2>
+                    
+                    <div class="alert alert-danger">
+                        <strong>Warning:</strong> This action cannot be undone!
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="fw-bold text-muted">Short URL</label>
+                        <p class="code-display">
+                            {{ request.scheme }}://{{ request.get_host }}/{{ url.short_code }}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="fw-bold text-muted">Original URL</label>
+                        <p class="text-break">{{ url.original_url }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="fw-bold text-muted">Statistics</label>
+                        <p class="mb-0">
+                            <i class="bi bi-graph-up"></i> Total Clicks: <strong>{{ url.click_count }}</strong><br>
+                            <i class="bi bi-calendar"></i> Created: {{ url.created_at|date:"M d, Y" }}
+                        </p>
+                    </div>
+                    
+                    <p class="text-center mb-4">
+                        Are you sure you want to delete this URL? All associated analytics data will also be deleted.
+                    </p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="bi bi-trash"></i> Yes, Delete
+                            </button>
+                            <a href="{% url 'shortener:url_detail' url.short_code %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

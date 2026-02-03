@@ -1,0 +1,138 @@
+{% extends 'shortener/base.html' %}
+
+{% block title %}Home - URL Shortener{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row justify-content-center text-center py-5">
+        <div class="col-lg-8">
+            <h1 class="display-4 fw-bold mb-4">Shorten Your URLs</h1>
+            <p class="lead text-muted mb-4">
+                Create short, memorable links in seconds. Track clicks, manage your URLs, and share with ease.
+            </p>
+            {% if not user.is_authenticated %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="{% url 'shortener:register' %}" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-rocket-takeoff"></i> Get Started
+                    </a>
+                    <a href="{% url 'shortener:login' %}" class="btn btn-outline-primary btn-lg px-5">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                </div>
+            {% else %}
+                <a href="{% url 'shortener:create_url' %}" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-plus-circle"></i> Create Short URL
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row g-4 py-5">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="bi bi-lightning-charge-fill text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Lightning Fast</h5>
+                    <p class="card-text text-muted">
+                        Create shortened URLs instantly with our optimized system
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="bi bi-graph-up text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Track Analytics</h5>
+                    <p class="card-text text-muted">
+                        Monitor click counts and see detailed statistics for each URL
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="bi bi-pencil-square text-info" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Custom URLs</h5>
+                    <p class="card-text text-muted">
+                        Create memorable custom short codes for your brand
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Features -->
+    <div class="row g-4 pb-5">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="bi bi-qr-code text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">QR Codes</h5>
+                    <p class="card-text text-muted">
+                        Generate QR codes for easy sharing on print and mobile
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="bi bi-clock-history text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Expiration Dates</h5>
+                    <p class="card-text text-muted">
+                        Set expiration dates for time-limited campaigns
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="bi bi-shield-check text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Secure & Private</h5>
+                    <p class="card-text text-muted">
+                        Your URLs are safe with user authentication and privacy controls
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    {% if total_urls > 0 %}
+    <div class="row justify-content-center py-4">
+        <div class="col-lg-8">
+            <div class="stats-card text-center">
+                <h3 class="mb-3">Platform Statistics</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2 class="display-5 fw-bold">{{ total_urls|default:0 }}</h2>
+                        <p class="mb-0">URLs Shortened</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="display-5 fw-bold">{{ total_clicks|default:0 }}</h2>
+                        <p class="mb-0">Total Clicks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
